@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Image, AlertCircle, X, Check, Star, Code2, ArrowRight } from 'lucide-react';
 import { Github } from './ui/Icons';
@@ -166,6 +166,21 @@ const PROJECTS_DATA = [
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (selectedProject) {
+      window.lenis?.stop();
+      document.body.style.overflow = 'hidden';
+    } else {
+      window.lenis?.start();
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.lenis?.start();
+      document.body.style.overflow = '';
+    };
+  }, [selectedProject]);
 
   const filteredProjects = PROJECTS_DATA.filter((proj) => {
     if (activeFilter === 'All') return true;
@@ -472,115 +487,144 @@ export default function Projects() {
           </AnimatePresence>
         </div>
 
-        {/* Project Detail Lightbox Modal */}
-        <AnimatePresence>
-          {selectedProject && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
-              onClick={() => setSelectedProject(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.95, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.95, y: 20 }}
-                transition={{ type: "spring", damping: 25, stiffness: 350 }}
-                className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-border-subtle bg-bg-surface shadow-[0_8px_30px_rgba(180,80,70,0.15)] p-6 sm:p-8 shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 right-4 z-10 rounded-full border border-border-subtle bg-black/50 p-2 text-text-body hover:text-text-heading transition-colors duration-200"
-                >
-                  <X size={16} />
-                </button>
+      </div>
 
-                {/* Screenshot Image */}
-                <div className="relative overflow-hidden rounded-xl border border-border-subtle bg-black mb-6">
+      {/* Project Detail Lightbox Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.96, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 15 }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-gradient-to-br from-[#0d0d14] via-[#08080d] to-[#040408] p-6 sm:p-8 shadow-[0_0_50px_rgba(0,0,0,0.8)] scrollbar-hide"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Subtle ambient gradient glow matching project color */}
+              <div 
+                className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-15 pointer-events-none" 
+                style={{ background: `radial-gradient(circle, ${selectedProject.color} 0%, transparent 70%)` }}
+              />
+
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-10 rounded-full border border-white/10 bg-black/60 p-2 text-text-muted hover:text-text-heading hover:scale-105 active:scale-95 transition-all duration-200"
+              >
+                <X size={16} />
+              </button>
+
+              {/* Mockup Browser Window Frame for Screenshot */}
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#07070a] mb-6 shadow-xl z-10">
+                {/* Browser top bar */}
+                <div className="flex items-center gap-1.5 px-4 py-2.5 bg-white/5 border-b border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+                  <div className="text-[10px] text-text-muted/60 font-mono ml-4 truncate">
+                    {selectedProject.demo || `https://github.com/piyush5093/${selectedProject.id}`}
+                  </div>
+                </div>
+                <div className="p-2 sm:p-4 bg-[#0a0a0f]">
                   <img
                     src={selectedProject.image}
                     alt={selectedProject.title}
-                    className="w-full object-contain max-h-[350px] mx-auto"
+                    className="w-full rounded-lg object-contain max-h-[350px] mx-auto shadow-md"
                   />
                 </div>
+              </div>
 
-                {/* Details */}
-                <div className="space-y-6 text-left">
-                  <div>
-                    <span className="font-mono text-xs text-sunset-amber uppercase tracking-wider">
-                      {selectedProject.category}
-                    </span>
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-text-heading mt-1 mb-2">
-                      {selectedProject.title}
-                    </h3>
-                    
-                    {/* Tech Badges */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedProject.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="rounded bg-bg-surface border border-border-subtle px-2 py-0.5 text-[10px] font-mono text-text-heading"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-mono tracking-widest text-text-body uppercase m-0">// Overview</h4>
-                    <p className="text-sm sm:text-base text-text-body leading-relaxed m-0">
-                      {selectedProject.description}
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-mono tracking-widest text-text-body uppercase m-0">// Key Features & Highlights</h4>
-                    <ul className="space-y-2.5 p-0 m-0 list-none">
-                      {selectedProject.highlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm text-text-body leading-relaxed">
-                          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sunset-amber/20 text-sunset-coral mt-0.5">
-                            <Check size={11} />
-                          </div>
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-4 pt-6 border-t border-border-subtle">
-                    {selectedProject.demo && (
-                      <a
-                        href={selectedProject.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-xl bg-sunset-deep hover:bg-sunset-coral px-6 py-3 text-sm font-semibold text-white hover:shadow-lg hover:shadow-accent/20 transition-all duration-300"
+              {/* Details */}
+              <div className="space-y-6 text-left relative z-10">
+                <div>
+                  <span 
+                    className="font-mono text-xs uppercase tracking-wider px-2 py-0.5 rounded bg-white/5 border border-white/5"
+                    style={{ color: selectedProject.color }}
+                  >
+                    {selectedProject.category}
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-display font-bold text-text-heading mt-3 mb-2">
+                    {selectedProject.title}
+                  </h3>
+                  
+                  {/* Tech Badges */}
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {selectedProject.tech.map((t) => (
+                      <span
+                        key={t}
+                        style={{ 
+                          borderColor: `${selectedProject.color}25`, 
+                          backgroundColor: `${selectedProject.color}05`, 
+                          color: selectedProject.color 
+                        }}
+                        className="rounded-md border px-2.5 py-0.5 text-[10px] font-mono font-semibold"
                       >
-                        Live Demo
-                        <ExternalLink size={14} />
-                      </a>
-                    )}
-                    <a
-                      href={selectedProject.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-xl border border-border-subtle bg-bg-surface shadow-[0_8px_30px_rgba(180,80,70,0.15)] hover:bg-bg-surface-hover px-6 py-3 text-sm font-semibold text-text-heading transition-all duration-300"
-                    >
-                      <Github size={14} />
-                      GitHub Repository
-                    </a>
+                        {t}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </motion.div>
+
+                <div className="space-y-3">
+                  <h4 className="text-xs font-mono tracking-widest text-text-muted uppercase m-0">// Overview</h4>
+                  <p className="text-sm sm:text-base text-text-body leading-relaxed m-0">
+                    {selectedProject.description}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-xs font-mono tracking-widest text-text-muted uppercase m-0">// Key Features & Highlights</h4>
+                  <ul className="space-y-3 p-0 m-0 list-none">
+                    {selectedProject.highlights.map((h, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-text-body/90 leading-relaxed">
+                        <div 
+                          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full mt-0.5 text-white"
+                          style={{ backgroundColor: `${selectedProject.color}20`, color: selectedProject.color }}
+                        >
+                          <Check size={11} />
+                        </div>
+                        <span>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-white/10 mt-8">
+                  {selectedProject.demo && (
+                    <a
+                      href={selectedProject.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ backgroundColor: selectedProject.color }}
+                      className="flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg shadow-black/30 hover:brightness-110 active:scale-[0.98] transition-all duration-200"
+                    >
+                      Live Demo
+                      <ExternalLink size={14} />
+                    </a>
+                  )}
+                  <a
+                    href={selectedProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-6 py-3 text-sm font-bold text-text-heading active:scale-[0.98] transition-all duration-300"
+                  >
+                    <Github size={14} />
+                    GitHub Repository
+                  </a>
+                </div>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-        
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
