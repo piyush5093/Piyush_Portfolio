@@ -125,7 +125,7 @@ const PROJECTS_DATA = [
       'Tailored AI generations matching creator-defined styles and text requirements'
     ],
     github: 'https://github.com/piyush5093/Thumbster',
-    demo: 'https://thumbster-server.vercel.app/'
+    demo: 'https://thumbster.vercel.app/'
   },
   {
     id: 'medislot',
