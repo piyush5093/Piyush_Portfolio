@@ -9,7 +9,6 @@ import Certifications from './components/Certifications';
 import Education from './components/Education';
 import Contact from './components/Contact';
 import { AuroraBackground } from './components/ui/AuroraBackground';
-import { CustomCursor } from './components/ui/CustomCursor';
 import { SmoothScroll } from './components/ui/SmoothScroll';
 import LoadingScreen from './components/ui/LoadingScreen';
 import { AnimatePresence } from 'framer-motion';
@@ -55,7 +54,6 @@ function App() {
         <AnimatePresence>
           {isLoading && <LoadingScreen />}
         </AnimatePresence>
-        <CustomCursor />
       {/* Drifting Aurora Background Effect */}
       <AuroraBackground />
 

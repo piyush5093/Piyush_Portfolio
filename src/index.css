@@ -28,20 +28,7 @@
     margin: 0;
   }
   
-  /* Custom Cursor Rules (Desktop Only) */
-  @media (pointer: fine) {
-    body, html, a, button, [role="button"], [data-cursor] {
-      cursor: none;
-    }
-    
-    a *, button *, [role="button"] *, [data-cursor] * {
-      cursor: none;
-    }
-    
-    input, textarea {
-      cursor: text !important;
-    }
-  }
+
   
   /* Scrollbar custom style */
   ::-webkit-scrollbar {
