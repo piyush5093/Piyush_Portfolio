@@ -19,11 +19,18 @@ import {
   SiGithub, 
   SiDocker, 
   SiPostman, 
-  SiGooglegemini,
   SiVercel,
-  SiRender
+  SiRender,
+  SiGooglecloud,
+  SiKubernetes,
+  SiTerraform,
+  SiPandas,
+  SiNumpy,
+  SiScikitlearn,
+  SiOpenai
 } from 'react-icons/si';
-import { FaJava } from 'react-icons/fa';
+import { FaJava, FaAws } from 'react-icons/fa';
+import { VscAzure } from 'react-icons/vsc';
 import { 
   Code2, 
   Layout, 
@@ -37,7 +44,8 @@ import {
   Globe, 
   Workflow, 
   Star,
-  Brain
+  Brain,
+  Cloud
 } from 'lucide-react';
 import { TiltCard } from './ui/TiltCard';
 import HeadingReveal from './ui/HeadingReveal';
@@ -86,11 +94,35 @@ const TECH_CATEGORIES = [
     ]
   },
   {
-    category: 'AI & GenAI',
+    category: 'Cloud Technologies',
+    icon: Cloud,
+    skills: [
+      { name: 'AWS (EC2, S3, Lambda, IAM)', logo: FaAws, color: '#FF9900' },
+      { name: 'Microsoft Azure', logo: VscAzure, color: '#0089D6' },
+      { name: 'Google Cloud Platform', logo: SiGooglecloud, color: '#4285F4' },
+      { name: 'Docker', logo: SiDocker, color: '#2496ED' },
+      { name: 'Kubernetes', logo: SiKubernetes, color: '#326CE5' },
+      { name: 'Terraform', logo: SiTerraform, color: '#7B42BC' }
+    ]
+  },
+  {
+    category: 'Machine Learning',
+    icon: Cpu,
+    skills: [
+      { name: 'Supervised & Unsupervised Algos', logo: Brain, color: '#34D399', isFallback: true },
+      { name: 'Model Evaluation', logo: Cpu, color: '#FBBF24', isFallback: true },
+      { name: 'Pandas', logo: SiPandas, color: '#150458' },
+      { name: 'NumPy', logo: SiNumpy, color: '#013243' },
+      { name: 'Scikit-learn', logo: SiScikitlearn, color: '#F7931E' }
+    ]
+  },
+  {
+    category: 'Generative AI & LLMs',
     icon: Sparkles,
     skills: [
-      { name: 'Gemini AI', logo: SiGooglegemini, color: '#8E75C2' },
-      { name: 'Groq', logo: Brain, color: '#FF5E00', isFallback: true }
+      { name: 'Prompt Engineering', logo: Sparkles, color: '#A78BFA', isFallback: true },
+      { name: 'LLM APIs (Basics)', logo: SiOpenai, color: '#00A244' },
+      { name: 'GenAI Fundamentals', logo: Brain, color: '#EC4899', isFallback: true }
     ]
   },
   {
@@ -99,7 +131,6 @@ const TECH_CATEGORIES = [
     skills: [
       { name: 'Git', logo: SiGit, color: '#F05032' },
       { name: 'GitHub', logo: SiGithub, color: '#FFFFFF' },
-      { name: 'Docker', logo: SiDocker, color: '#2496ED' },
       { name: 'Postman', logo: SiPostman, color: '#FF6C37' },
       { name: 'Vercel', logo: SiVercel, color: '#FFFFFF' },
       { name: 'Render', logo: SiRender, color: '#46E3B7' }
@@ -145,7 +176,7 @@ const TechTile = ({ skill, index }) => {
         boxShadow: hovered ? `0 8px 24px -4px ${skill.color}18` : 'none',
         transition: 'border-color 0.2s ease-out, box-shadow 0.2s ease-out'
       }}
-      className="relative flex flex-col items-center justify-center rounded-xl border bg-bg-surface p-4 text-center cursor-default h-[90px] w-full"
+      className="relative flex flex-col items-center justify-center rounded-xl border bg-bg-surface p-3 text-center cursor-default min-h-[95px] h-auto w-full"
     >
       {/* Core Star Badge */}
       {isCore && (
@@ -165,7 +196,7 @@ const TechTile = ({ skill, index }) => {
       </motion.div>
 
       {/* Tech Name */}
-      <span className="text-[10px] font-mono font-medium tracking-wide text-text-heading truncate max-w-full">
+      <span className="text-[10px] font-mono font-medium tracking-wide text-text-heading max-w-full leading-normal">
         {skill.name}
       </span>
     </motion.div>
@@ -205,8 +236,8 @@ export default function Skills() {
           {TECH_CATEGORIES.map((cat, catIdx) => {
             const CatIcon = cat.icon;
             
-            // Adjust card span: Languages & Tools take 2 columns on large screens to display complete grid balance
-            const isLarge = cat.category === 'Frontend' || cat.category === 'Tools & Platforms';
+            // Adjust card span: Frontend, Cloud, and Tools take 2 columns on large screens to display complete grid balance
+            const isLarge = cat.category === 'Frontend' || cat.category === 'Cloud Technologies' || cat.category === 'Tools & Platforms';
             
             return (
               <TiltCard 
