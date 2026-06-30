@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function HeadingReveal({ text, className = '', delay = 0 }) {
+export default function HeadingReveal({ text, className = '', delay = 0, trigger = "inView" }) {
   const wipeVariants = {
     hidden: { 
       clipPath: 'polygon(0 -20%, 0 -20%, 0 120%, 0 120%)',
@@ -20,8 +20,9 @@ export default function HeadingReveal({ text, className = '', delay = 0 }) {
     <motion.span
       variants={wipeVariants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
+      animate={trigger === "mount" ? "visible" : undefined}
+      whileInView={trigger === "inView" ? "visible" : undefined}
+      viewport={trigger === "inView" ? { once: true, margin: "-40px" } : undefined}
       className={`inline-block font-display ${className}`}
     >
       {text}

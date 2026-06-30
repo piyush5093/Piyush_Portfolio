@@ -60,7 +60,7 @@ export default function Hero() {
             {/* Main Headings Group */}
             <motion.div className="flex flex-col items-start">
               <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-text-light leading-[1.05] m-0">
-                <HeadingReveal text="Piyush Sharad Patil" />
+                <HeadingReveal text="Piyush Sharad Patil" trigger="mount" />
               </motion.h1>
               <motion.div variants={itemVariants} className="mt-4 sm:mt-5">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold animate-text-gradient bg-gradient-to-r from-accent via-[#a855f7] to-accent bg-[length:200%_auto] bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(99,102,241,0.4)] m-0 leading-tight">
